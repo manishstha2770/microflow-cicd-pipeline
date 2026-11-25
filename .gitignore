@@ -1,0 +1,31 @@
+# Local credentials
+.env
+.env.*
+!.env.example
+.secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+kubeconfig*
+# Terraform state and local inputs
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+!*.example.tfvars
+*.tfplan
+crash.log
+# Build and editor outputs
+.DS_Store
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+node_modules/
+dist/
+coverage/
+data/

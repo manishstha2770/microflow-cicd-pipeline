@@ -1,0 +1,66 @@
+services:
+  user-service:
+    build: ./services/user-service
+    environment:
+      DATABASE_URL: sqlite:///data/user.db
+      JWT_SECRET: ${JWT_SECRET:-local-development-secret}
+    volumes:
+      - user-data:/app/data
+    expose:
+      - "8001"
+
+  product-service:
+    build: ./services/product-service
+    environment:
+      DATABASE_URL: sqlite:///data/product.db
+    volumes:
+      - product-data:/app/data
+    expose:
+      - "8002"
+
+  order-service:
+    build: ./services/order-service
+    environment:
+      DATABASE_URL: sqlite:///data/order.db
+    volumes:
+      - order-data:/app/data
+    expose:
+      - "8003"
+
+  payment-service:
+    build: ./services/payment-service
+    environment:
+      DATABASE_URL: sqlite:///data/payment.db
+    volumes:
+      - payment-data:/app/data
+    expose:
+      - "8004"
+
+  api-gateway:
+    build: ./services/api-gateway
+    environment:
+      USER_SERVICE_URL: http://user-service:8001
+      PRODUCT_SERVICE_URL: http://product-service:8002
+      ORDER_SERVICE_URL: http://order-service:8003
+      PAYMENT_SERVICE_URL: http://payment-service:8004
+      CORS_ORIGINS: http://localhost:8080,http://localhost:5173
+    depends_on:
+      - user-service
+      - product-service
+      - order-service
+      - payment-service
+    expose:
+      - "8000"
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - api-gateway
+    ports:
+      - "8080:8080"
+
+volumes:
+  user-data:
+  product-data:
+  order-data:
+  payment-data:
